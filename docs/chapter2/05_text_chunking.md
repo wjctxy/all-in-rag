@@ -295,7 +295,7 @@ recursive_splitter = RecursiveCharacterTextSplitter(
 )
 final_chunks = recursive_splitter.split_documents(structured_docs)
 
-for chunk in final_chunks[:3]:
+for chunk in final_chunks[:5]:
     print(chunk.metadata)  # 仍然包含 Header 1 / Header 2
     print(chunk.page_content)
 ```

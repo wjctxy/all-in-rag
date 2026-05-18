@@ -38,7 +38,7 @@ final_chunks = recursive_splitter.split_documents(structured_docs)
 
 print(f"第一阶段（按标题）块数: {len(structured_docs)}")
 print(f"第二阶段（递归字符）块数: {len(final_chunks)}")
-print("--- 前5个最终块（含继承元数据）---")
+print("--- 前5个最终块（含继承元数据） ---")
 for i, chunk in enumerate(final_chunks[:5], 1):
     print("=" * 60)
     print(f"块{i} 长度: {len(chunk.page_content)}")
