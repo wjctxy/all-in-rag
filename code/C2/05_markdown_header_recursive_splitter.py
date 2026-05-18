@@ -30,7 +30,7 @@ structured_docs = markdown_splitter.split_text(markdown_text)
 
 # 第二步：对第一步的大块继续做递归字符分块，控制 chunk_size
 recursive_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=80,
+    chunk_size=80,  # 示例中故意设小，便于直观看到二次切分效果
     chunk_overlap=20,
     separators=["\n\n", "\n", "。", "，", " ", ""],
 )
