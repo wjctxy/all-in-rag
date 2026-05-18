@@ -258,6 +258,48 @@ docs = text_splitter.split_documents(documents)
 
 - **RAG应用优势**: 这种两阶段的分块方法，既保留了文档的宏观逻辑结构（通过元数据），又确保了每个块的大小适中，是处理结构化文档进行RAG的理想方案。
 
+下面给出一个可直接运行的融合示例（对应 `code/C2/05_markdown_header_recursive_splitter.py`）：
+
+```python
+from langchain_text_splitters import (
+    MarkdownHeaderTextSplitter,
+    RecursiveCharacterTextSplitter,
+)
+
+markdown_text = """
+# RAG 系统设计
+
+## 检索模块
+
+检索模块负责从向量数据库中召回候选片段。为了提升召回效果，需要统一 embedding 模型、分块策略和索引参数。
+当候选片段较多时，还会使用重排序模型做二次筛选。
+
+## 生成模块
+
+生成模块负责将问题与检索结果组合成提示词，并调用大语言模型生成答案。
+提示词模板通常包含角色设定、约束条件、引用来源和输出格式。
+"""
+
+# 第一步：按标题分块（保留标题元数据）
+markdown_splitter = MarkdownHeaderTextSplitter(
+    headers_to_split_on=[("#", "Header 1"), ("##", "Header 2")],
+    strip_headers=False,
+)
+structured_docs = markdown_splitter.split_text(markdown_text)
+
+# 第二步：对第一步结果继续递归分块
+recursive_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=80,
+    chunk_overlap=20,
+    separators=["\n\n", "\n", "。", "，", " ", ""],
+)
+final_chunks = recursive_splitter.split_documents(structured_docs)
+
+for chunk in final_chunks[:3]:
+    print(chunk.metadata)  # 仍然包含 Header 1 / Header 2
+    print(chunk.page_content)
+```
+
 ## 四、其他开源框架中的分块策略
 
 ### 4.1 Unstructured：基于文档元素的智能分块
